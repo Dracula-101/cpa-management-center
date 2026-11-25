@@ -12,6 +12,8 @@ import iconGrokDark from '@/assets/icons/grok-dark.svg';
 import iconIflow from '@/assets/icons/iflow.svg';
 import iconKimiDark from '@/assets/icons/kimi-dark.svg';
 import iconKimiLight from '@/assets/icons/kimi-light.svg';
+import iconOpenCode from '@/assets/icons/opencode.svg';
+import iconOpenCodeDark from '@/assets/icons/opencode-dark.svg';
 import iconQwen from '@/assets/icons/qwen.svg';
 import iconVertex from '@/assets/icons/vertex.svg';
 import type { AuthFileItem, ResolvedTheme, ThemeColors } from '@/types';
@@ -36,6 +38,7 @@ export type QuotaProviderType =
   | 'devin'
   | 'kimi'
   | 'meta'
+  | 'opencode'
   | 'plugin'
   | 'xai';
 export type AuthFileQuotaFilter = string | null;
@@ -49,6 +52,7 @@ export const QUOTA_PROVIDER_TYPES = new Set<QuotaProviderType>([
   'codex',
   'devin',
   'kimi',
+  'opencode',
   'plugin',
   'xai',
 ]);
@@ -101,6 +105,7 @@ export const AUTH_FILE_ICONS: Record<string, AuthFileIconAsset> = {
   xai: { light: iconGrok, dark: iconGrokDark },
   iflow: iconIflow,
   kimi: { light: iconKimiDark, dark: iconKimiLight },
+  opencode: { light: iconOpenCode, dark: iconOpenCodeDark },
   qwen: iconQwen,
   vertex: iconVertex,
 };

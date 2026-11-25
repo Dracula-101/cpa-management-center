@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
+import { isApiKeyProviderItem } from '@/features/authFiles/apiKeyProviders';
 import { useTranslation } from 'react-i18next';
 import { apiClient, authFilesApi } from '@/services/api';
 import { useNotificationStore } from '@/stores';
@@ -70,6 +71,17 @@ export function useAuthFilesModels(): UseAuthFilesModelsResult {
       setModelsList([]);
       setModelsError(null);
       setModelsModalOpen(true);
+
+      if (isApiKeyProviderItem(item)) {
+        setModelsList(
+          (item.apiKeyProvider.models ?? []).map((model) => ({
+            id: model.alias || model.name,
+            display_name: model.name,
+          }))
+        );
+        setModelsLoading(false);
+        return;
+      }
 
       const cached = modelsCacheRef.current.get(cacheKey);
       if (cached) {

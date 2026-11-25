@@ -432,7 +432,9 @@
     "quota_refresh_single": "할당량 새로 고침",
     "quota_refresh_hint": "이 자격 증명의 할당량만 새로 고침합니다",
     "quota_refresh_success": "\"{{name}}\"의 할당량을 새로 고쳤습니다",
-    "quota_refresh_failed": "\"{{name}}\"의 할당량 새로 고침 실패: {{message}}"
+    "quota_refresh_failed": "\"{{name}}\"의 할당량 새로 고침 실패: {{message}}",
+    "filter_opencode": "OpenCode Go",
+    "filter_openai-compatibility": "OpenAI compatible"
   },
   "antigravity_subscription": {
     "plan_unknown": "알 수 없음",
@@ -2598,5 +2600,21 @@
     "enabled": "Enabled {{name}}",
     "disabled": "Disabled {{name}}",
     "toggle": "Enable {{name}}"
+  },
+  "opencode_quota": {
+    "title": "OpenCode Go Quota",
+    "empty_title": "No OpenCode Go provider",
+    "empty_desc": "Add an OpenCode Go API key from OAuth Login to view its usage.",
+    "stale_request": "The connection or credential changed. Please retry.",
+    "idle": "Check quota",
+    "loading": "Loading quota...",
+    "load_failed": "Failed to load quota: {{message}}",
+    "missing_auth_index": "Provider has no auth_index yet; reload the page.",
+    "empty_data": "No quota data available",
+    "refresh_button": "Refresh Quota",
+    "fetch_all": "Fetch All",
+    "rolling": "5-hour limit",
+    "weekly": "Weekly limit",
+    "monthly": "Monthly limit"
   }
 }

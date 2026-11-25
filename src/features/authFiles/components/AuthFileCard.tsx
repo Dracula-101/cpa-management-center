@@ -36,6 +36,7 @@ import { AuthFileQuotaSection } from '@/features/authFiles/components/AuthFileQu
 import { AuthFileCooldownSection } from './AuthFileCooldownSection';
 import { getSiwcBindingStatus, supportsSiwcBinding } from '@/features/oauth/siwcBinding';
 import { SiwcStatusBadge } from '@/features/oauth/components/SiwcStatusBadge';
+import { isApiKeyProviderItem } from '@/features/authFiles/apiKeyProviders';
 import styles from './AuthFileCard.module.scss';
 
 export type AuthFileCardProps = {
@@ -88,6 +89,7 @@ export function AuthFileCard(props: AuthFileCardProps) {
   } = props;
 
   const isRuntimeOnly = isRuntimeOnlyAuthFile(file);
+  const apiKeyProvider = isApiKeyProviderItem(file) ? file.apiKeyProvider : null;
   const providerKey = normalizeProviderKey(String(file.type ?? file.provider ?? 'unknown'));
   const isAistudio = providerKey === 'aistudio';
   const showModelsButton = !isRuntimeOnly || isAistudio;
@@ -138,7 +140,7 @@ export function AuthFileCard(props: AuthFileCardProps) {
   return (
     <article className={cardClasses} style={cardStyle}>
       <header className={styles.head}>
-        {!isRuntimeOnly && (
+        {!isRuntimeOnly && !apiKeyProvider && (
           <SelectionCheckbox
             checked={selected}
             onChange={() => onToggleSelect(file.name)}
@@ -222,11 +224,37 @@ export function AuthFileCard(props: AuthFileCardProps) {
       </div>
 
       <div className={styles.metaRow}>
-        <span title={t('auth_files.file_size')}>{file.size ? formatFileSize(file.size) : '-'}</span>
-        <span className={styles.metaDivider} aria-hidden="true">
-          ·
-        </span>
-        <span title={t('auth_files.file_modified')}>{formatModified(file)}</span>
+        {apiKeyProvider ? (
+          <>
+            <span>
+              {t('api_key_providers.models', { count: apiKeyProvider.models?.length ?? 0 })}
+            </span>
+            <span className={styles.metaDivider} aria-hidden="true">
+              ·
+            </span>
+            <span>
+              {t('api_key_providers.keys', { count: apiKeyProvider.apiKeyEntries.length })}
+            </span>
+            {apiKeyProvider.prefix && (
+              <>
+                <span className={styles.metaDivider} aria-hidden="true">
+                  ·
+                </span>
+                <span title={t('api_key_providers.prefix_hint')}>{apiKeyProvider.prefix}/</span>
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            <span title={t('auth_files.file_size')}>
+              {file.size ? formatFileSize(file.size) : '-'}
+            </span>
+            <span className={styles.metaDivider} aria-hidden="true">
+              ·
+            </span>
+            <span title={t('auth_files.file_modified')}>{formatModified(file)}</span>
+          </>
+        )}
         {priorityValue !== undefined && (
           <>
             <span className={styles.metaDivider} aria-hidden="true">
@@ -299,22 +327,26 @@ export function AuthFileCard(props: AuthFileCardProps) {
                   {isManualRefreshing ? <LoadingSpinner size={14} /> : <IconRefreshCw size={15} />}
                 </Button>
               )}
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => onDownload(file.name)}
-                className={styles.iconButton}
-                title={t('auth_files.download_button')}
-                disabled={disableControls}
-              >
-                <IconDownload size={15} />
-              </Button>
+              {!apiKeyProvider && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => onDownload(file.name)}
+                  className={styles.iconButton}
+                  title={t('auth_files.download_button')}
+                  disabled={disableControls}
+                >
+                  <IconDownload size={15} />
+                </Button>
+              )}
               <Button
                 variant="secondary"
                 size="sm"
                 onClick={() => onOpenPrefixProxyEditor(file)}
                 className={styles.iconButton}
-                title={t('auth_files.prefix_proxy_button')}
+                title={
+                  apiKeyProvider ? t('api_key_providers.edit') : t('auth_files.prefix_proxy_button')
+                }
                 disabled={disableControls || isManualRefreshing}
               >
                 <IconSettings size={15} />

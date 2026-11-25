@@ -10,7 +10,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { authFilesApi } from '@/services/api';
 import { Button } from '@/components/ui/Button';
 import { CardLayoutSwitch } from '@/components/ui/CardLayoutSwitch';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -62,6 +61,7 @@ import { useQuotaActions } from './hooks/useQuotaActions';
 import { useQuotaBatchLoader } from './hooks/useQuotaBatchLoader';
 import { readQuotaUiState, writeQuotaUiState } from './uiState';
 import styles from './QuotaPage.module.scss';
+import { listCredentialsWithApiKeyProviders } from '@/features/authFiles/apiKeyProviders';
 
 const TAB_IDS: string[] = ['all', ...QUOTA_TAB_ORDER];
 const SKELETON_CARD_COUNT = 6;
@@ -114,7 +114,7 @@ export function QuotaPage() {
     setLoading(true);
     setError('');
     try {
-      const data = await authFilesApi.list();
+      const data = await listCredentialsWithApiKeyProviders();
       if (!isCurrent()) return;
       setFiles(data?.files || []);
       setFilesGeneration(sessionGeneration);
@@ -144,6 +144,7 @@ export function QuotaPage() {
   const codexQuota = useQuotaStore((state) => state.codexQuota);
   const devinQuota = useQuotaStore((state) => state.devinQuota);
   const kimiQuota = useQuotaStore((state) => state.kimiQuota);
+  const opencodeQuota = useQuotaStore((state) => state.opencodeQuota);
   const copilotQuota = useQuotaStore((state) => state.copilotQuota);
   const metaQuota = useQuotaStore((state) => state.metaQuota);
   const pluginQuota = useQuotaStore((state) => state.pluginQuota);
@@ -157,6 +158,7 @@ export function QuotaPage() {
         codex: codexQuota,
         devin: devinQuota,
         kimi: kimiQuota,
+        opencode: opencodeQuota,
         copilot: copilotQuota,
         meta: metaQuota,
         plugin: pluginQuota,
@@ -168,6 +170,7 @@ export function QuotaPage() {
       codexQuota,
       devinQuota,
       kimiQuota,
+      opencodeQuota,
       copilotQuota,
       metaQuota,
       pluginQuota,

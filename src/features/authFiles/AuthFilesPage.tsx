@@ -24,7 +24,6 @@ import {
   type ResolvedTheme,
 } from '@/features/authFiles/constants';
 import { AuthFileCard } from '@/features/authFiles/components/AuthFileCard';
-import { ApiKeyProvidersSection } from '@/features/authFiles/components/ApiKeyProvidersSection';
 import { AuthFileDetailsSheet } from '@/features/authFiles/components/AuthFileDetailsSheet';
 import { getAuthFileRefreshKey } from '@/features/authFiles/manualRefresh';
 import { AuthFileRefreshResults } from '@/features/authFiles/components/AuthFileRefreshResults';
@@ -63,6 +62,12 @@ import {
 import { QUOTA_ADAPTERS } from '@/features/quota/providers';
 import type { QuotaStore } from '@/features/quota/providers/types';
 import { useAuthStore, useNotificationStore, useQuotaStore, useThemeStore } from '@/stores';
+import {
+  deleteApiKeyProvider,
+  isApiKeyProviderItem,
+  setApiKeyProviderEnabled,
+  type ApiKeyProviderItem,
+} from './apiKeyProviders';
 import styles from './AuthFilesPage.module.scss';
 
 const DEFAULT_REGULAR_PAGE_SIZE = 9;
@@ -88,6 +93,7 @@ const normalizePersistedStatusFilterMode = (value: unknown): AuthFilesStatusFilt
 export function AuthFilesPage() {
   const { t } = useTranslation();
   const showNotification = useNotificationStore((state) => state.showNotification);
+  const showConfirmation = useNotificationStore((state) => state.showConfirmation);
   const connectionStatus = useAuthStore((state) => state.connectionStatus);
   const resolvedTheme: ResolvedTheme = useThemeStore((state) => state.resolvedTheme);
   const pageTransitionLayer = usePageTransitionLayer();
@@ -462,11 +468,11 @@ export function AuthFilesPage() {
   const start = (currentPage - 1) * pageSize;
   const pageItems = useMemo(() => sorted.slice(start, start + pageSize), [pageSize, sorted, start]);
   const selectablePageItems = useMemo(
-    () => pageItems.filter((file) => !isRuntimeOnlyAuthFile(file)),
+    () => pageItems.filter((file) => !isRuntimeOnlyAuthFile(file) && !isApiKeyProviderItem(file)),
     [pageItems]
   );
   const selectableFilteredItems = useMemo(
-    () => sorted.filter((file) => !isRuntimeOnlyAuthFile(file)),
+    () => sorted.filter((file) => !isRuntimeOnlyAuthFile(file) && !isApiKeyProviderItem(file)),
     [sorted]
   );
   const selectedNames = useMemo(() => Array.from(selectedFiles), [selectedFiles]);
@@ -578,6 +584,36 @@ export function AuthFilesPage() {
   );
   const loadingQuotaSet = useMemo(() => new Set(loadingQuotaKeys.split('\n')), [loadingQuotaKeys]);
 
+  // API-key providers live in the config, so their toggle/delete edit that entry, not /credentials.
+  const runApiKeyProviderAction = async (action: () => Promise<void>, success: string) => {
+    try {
+      await action();
+      showNotification(success, 'success');
+    } catch (err: unknown) {
+      showNotification(err instanceof Error ? err.message : String(err), 'error');
+    }
+    await loadFiles({ background: true });
+  };
+
+  const toggleApiKeyProvider = (item: ApiKeyProviderItem, enabled: boolean) =>
+    void runApiKeyProviderAction(
+      () => setApiKeyProviderEnabled(item, enabled),
+      t(enabled ? 'api_key_providers.enabled' : 'api_key_providers.disabled', { name: item.name })
+    );
+
+  const removeApiKeyProvider = (item: ApiKeyProviderItem) =>
+    showConfirmation({
+      title: t('api_key_providers.delete_title'),
+      message: t('api_key_providers.delete_confirm', { name: item.name }),
+      variant: 'danger',
+      confirmText: t('common.confirm'),
+      onConfirm: () =>
+        runApiKeyProviderAction(
+          () => deleteApiKeyProvider(item),
+          t('api_key_providers.deleted', { name: item.name })
+        ),
+    });
+
   const renderCard = (file: (typeof pageItems)[number], index: number) => (
     <AuthFileCard
       key={getQuotaCacheKey(file)}
@@ -597,9 +633,15 @@ export function AuthFilesPage() {
       onDownload={handleDownload}
       onManualRefresh={handleManualRefresh}
       onCooldownReset={handleCooldownReset}
-      onOpenPrefixProxyEditor={openPrefixProxyEditor}
-      onDelete={handleDelete}
-      onToggleStatus={handleStatusToggle}
+      onOpenPrefixProxyEditor={
+        isApiKeyProviderItem(file) ? () => navigate('/ai-providers') : openPrefixProxyEditor
+      }
+      onDelete={isApiKeyProviderItem(file) ? () => removeApiKeyProvider(file) : handleDelete}
+      onToggleStatus={
+        isApiKeyProviderItem(file)
+          ? (_item, enabled) => toggleApiKeyProvider(file, enabled)
+          : handleStatusToggle
+      }
       onToggleSelect={toggleSelect}
     />
   );
@@ -765,8 +807,6 @@ export function AuthFilesPage() {
           </div>
         )}
       </section>
-
-      <ApiKeyProvidersSection disableControls={disableControls} resolvedTheme={resolvedTheme} />
 
       <div ref={oauthSectionRef}>
         <ModelRulesEntry

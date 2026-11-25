@@ -432,7 +432,9 @@
     "quota_refresh_single": "Refresh quota",
     "quota_refresh_hint": "Refresh quota only for this credential",
     "quota_refresh_success": "Quota refreshed for \"{{name}}\"",
-    "quota_refresh_failed": "Failed to refresh quota for \"{{name}}\": {{message}}"
+    "quota_refresh_failed": "Failed to refresh quota for \"{{name}}\": {{message}}",
+    "filter_opencode": "OpenCode Go",
+    "filter_openai-compatibility": "OpenAI compatible"
   },
   "antigravity_subscription": {
     "plan_unknown": "Unknown",
@@ -2598,5 +2600,21 @@
     "enabled": "Enabled {{name}}",
     "disabled": "Disabled {{name}}",
     "toggle": "Enable {{name}}"
+  },
+  "opencode_quota": {
+    "title": "OpenCode Go Quota",
+    "empty_title": "No OpenCode Go provider",
+    "empty_desc": "Add an OpenCode Go API key from OAuth Login to view its usage.",
+    "stale_request": "The connection or credential changed. Please retry.",
+    "idle": "Check quota",
+    "loading": "Loading quota...",
+    "load_failed": "Failed to load quota: {{message}}",
+    "missing_auth_index": "Provider has no auth_index yet; reload the page.",
+    "empty_data": "No quota data available",
+    "refresh_button": "Refresh Quota",
+    "fetch_all": "Fetch All",
+    "rolling": "5-hour limit",
+    "weekly": "Weekly limit",
+    "monthly": "Monthly limit"
   }
 }

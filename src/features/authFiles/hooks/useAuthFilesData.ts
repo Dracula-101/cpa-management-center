@@ -34,6 +34,10 @@ import {
   isRuntimeOnlyAuthFile,
   normalizeProviderKey,
 } from '@/features/authFiles/constants';
+import {
+  isApiKeyProviderItem,
+  listCredentialsWithApiKeyProviders,
+} from '@/features/authFiles/apiKeyProviders';
 
 type DeleteAllOptions = {
   filter: string;
@@ -145,7 +149,7 @@ export function useAuthFilesData(options?: UseAuthFilesDataOptions): UseAuthFile
 
   const selectAllVisible = useCallback((visibleFiles: AuthFileItem[]) => {
     const nextSelected = visibleFiles
-      .filter((file) => !isRuntimeOnlyAuthFile(file))
+      .filter((file) => !isRuntimeOnlyAuthFile(file) && !isApiKeyProviderItem(file))
       .map((file) => file.name);
     if (nextSelected.length === 0) return;
     setSelectedFiles((prev) => {
@@ -157,7 +161,7 @@ export function useAuthFilesData(options?: UseAuthFilesDataOptions): UseAuthFile
 
   const invertVisibleSelection = useCallback((visibleFiles: AuthFileItem[]) => {
     const visibleNames = visibleFiles
-      .filter((file) => !isRuntimeOnlyAuthFile(file))
+      .filter((file) => !isRuntimeOnlyAuthFile(file) && !isApiKeyProviderItem(file))
       .map((file) => file.name);
     if (visibleNames.length === 0) return;
 
@@ -238,7 +242,7 @@ export function useAuthFilesData(options?: UseAuthFilesDataOptions): UseAuthFile
       }
 
       try {
-        const data = await authFilesApi.list();
+        const data = await listCredentialsWithApiKeyProviders();
         if (!isCurrentRequest()) return; // 已被更新的请求/连接/变更取代
         setFiles(data?.files || []);
         setError('');
@@ -402,12 +406,14 @@ export function useAuthFilesData(options?: UseAuthFilesDataOptions): UseAuthFile
               showNotification(t('auth_files.delete_all_success'), 'success');
               invalidateInFlightLoads();
               onFilesMutatedRef.current?.();
-              setFiles((prev) => prev.filter((file) => isRuntimeOnlyAuthFile(file)));
+              setFiles((prev) =>
+                prev.filter((file) => isRuntimeOnlyAuthFile(file) || isApiKeyProviderItem(file))
+              );
               deselectAll();
               notifyAuthFilesChanged();
             } else {
               const filesToDelete = files.filter((file) => {
-                if (isRuntimeOnlyAuthFile(file)) return false;
+                if (isRuntimeOnlyAuthFile(file) || isApiKeyProviderItem(file)) return false;
                 if (
                   isFiltered &&
                   normalizeProviderKey(String(file.type ?? file.provider ?? '')) !== filter

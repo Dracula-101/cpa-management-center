@@ -461,6 +461,14 @@ export interface KimiQuotaState {
   errorStatus?: number;
 }
 
+/** OpenCode Go reports each window as a used percentage; rows reuse the Kimi row shape. */
+export interface OpenCodeQuotaState {
+  status: 'idle' | 'loading' | 'success' | 'error';
+  rows: KimiQuotaRow[];
+  error?: string;
+  errorStatus?: number;
+}
+
 // xAI/Grok API payload types
 export interface XaiBillingCent {
   val?: number | string;
