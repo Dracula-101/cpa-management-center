@@ -2572,5 +2572,16 @@
     "remove_pattern": "{{row}}. regex satırını sil",
     "move_up": "{{row}}. regex satırını yukarı taşı",
     "move_down": "{{row}}. regex satırını aşağı taşı"
+  },
+  "opencode_go": {
+    "title": "OpenCode Go API key",
+    "tile_caption": "API key",
+    "key_label": "OpenCode Go API key",
+    "key_hint": "From opencode.ai/console. It is checked against OpenCode Go, then saved as the opencode-go provider; models are called as opencode-go/<model>.",
+    "connect_button": "Connect",
+    "no_models": "OpenCode Go returned no models for this key.",
+    "result_title": "Added OpenCode Go with {{count}} models",
+    "view_providers": "View AI providers",
+    "done": "Done"
   }
 }

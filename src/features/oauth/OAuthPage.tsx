@@ -5,6 +5,7 @@ import { useRevealGroup } from '@/hooks/motion';
 import { useAuthStore, useThemeStore } from '@/stores';
 import iconVertex from '@/assets/icons/vertex.svg';
 import iconCodex from '@/assets/icons/codex.svg';
+import iconOpenCode from '@/assets/icons/opencode.svg';
 import { KIMI_DISPLAY_NAME } from '@/features/providers/kimi';
 import { OAuthHeader } from './components/OAuthHeader';
 import { LoginProxyField } from './components/LoginProxyField';
@@ -12,6 +13,7 @@ import { ProviderTile } from './components/ProviderTile';
 import { SponsorCard, type SponsorCardSite } from './components/SponsorCard';
 import { OAuthFlowDialog, type DialogHeading } from './components/OAuthFlowDialog';
 import { VertexImportDialog } from './components/VertexImportDialog';
+import { OpenCodeGoDialog } from './components/OpenCodeGoDialog';
 import { SiwcBindDialog } from './components/SiwcBindDialog';
 import {
   useOAuthFlows,
@@ -32,7 +34,9 @@ import styles from './OAuthPage.module.scss';
 const VERTEX_DIALOG_ID = '__vertex__';
 const VERTEX_LABEL = 'Vertex AI';
 
-type DialogTarget = { kind: 'oauth'; id: string } | { kind: 'vertex' };
+const OPENCODE_LABEL = 'OpenCode Go';
+
+type DialogTarget = { kind: 'oauth'; id: string } | { kind: 'vertex' } | { kind: 'opencode' };
 
 /**
  * OAuth 登录：提供商画廊（一屏看全）+ 聚焦的授权对话框。
@@ -129,6 +133,12 @@ export function OAuthPage() {
   const openVertex = () => {
     focusedRef.current = VERTEX_DIALOG_ID;
     setDialog({ kind: 'vertex' });
+    setDialogOpen(true);
+  };
+
+  const openOpenCode = () => {
+    focusedRef.current = null;
+    setDialog({ kind: 'opencode' });
     setDialogOpen(true);
   };
 
@@ -231,6 +241,13 @@ export function OAuthPage() {
             index={regularCards.length + tileIndexOffset + 1}
             onOpen={openSiwc}
           />
+          <ProviderTile
+            label={OPENCODE_LABEL}
+            caption={t('opencode_go.tile_caption')}
+            icon={iconOpenCode}
+            index={regularCards.length + tileIndexOffset + 2}
+            onOpen={openOpenCode}
+          />
         </div>
       </section>
 
@@ -266,6 +283,18 @@ export function OAuthPage() {
         onImport={() => void vertexImport.importCredential()}
         onImportAnother={vertexImport.resetForAnother}
         onViewAuthFiles={viewAuthFiles}
+        onClose={closeDialog}
+      />
+
+      <OpenCodeGoDialog
+        open={dialogOpen && dialog?.kind === 'opencode'}
+        heading={{
+          title: t('opencode_go.title'),
+          caption: t('opencode_go.tile_caption'),
+          icon: iconOpenCode,
+        }}
+        onAdded={flows.recordCredentialAdded}
+        onViewProviders={() => navigate('/ai-providers')}
         onClose={closeDialog}
       />
 

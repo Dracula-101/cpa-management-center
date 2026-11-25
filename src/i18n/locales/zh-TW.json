@@ -2563,5 +2563,16 @@
     "remove_pattern": "刪除第 {{row}} 列正規規則",
     "move_up": "上移第 {{row}} 列正規規則",
     "move_down": "下移第 {{row}} 列正規規則"
+  },
+  "opencode_go": {
+    "title": "OpenCode Go API key",
+    "tile_caption": "API key",
+    "key_label": "OpenCode Go API key",
+    "key_hint": "From opencode.ai/console. It is checked against OpenCode Go, then saved as the opencode-go provider; models are called as opencode-go/<model>.",
+    "connect_button": "Connect",
+    "no_models": "OpenCode Go returned no models for this key.",
+    "result_title": "Added OpenCode Go with {{count}} models",
+    "view_providers": "View AI providers",
+    "done": "Done"
   }
 }

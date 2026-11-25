@@ -842,6 +842,14 @@ export const providersApi = {
       'openai-compatibility'
     ) as OpenAIProviderConfig[];
   },
+  /** Replaces the group with the same name (or appends it), keeping every other group as is. */
+  async upsertOpenAIGroup(group: Record<string, unknown> & { name: string }) {
+    const groups = await getGroups('openai-compatibility');
+    await putGroups('openai-compatibility', [
+      ...groups.filter((existing) => existing.name !== group.name),
+      group,
+    ]);
+  },
   async createOpenAIProvider(config: OpenAIProviderConfig) {
     const groups = await getGroups('openai-compatibility');
     await putGroups('openai-compatibility', [...groups, serializeOpenAIGroup(config)]);
