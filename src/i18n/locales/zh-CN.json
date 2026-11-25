@@ -2574,5 +2574,20 @@
     "view_providers": "View AI providers",
     "done": "Done",
     "key_note": "Saved as the opencode-go provider; models are called as opencode-go/<model>. Get a key at"
+  },
+  "api_key_providers": {
+    "title": "API key providers",
+    "badge": "API key",
+    "models": "Models {{count}}",
+    "keys": "Keys {{count}}",
+    "prefix_hint": "Call these models as <prefix>/<model>",
+    "edit": "Edit in AI Providers",
+    "delete": "Delete provider",
+    "delete_title": "Delete provider",
+    "delete_confirm": "Delete the {{name}} provider and its API keys from the config?",
+    "deleted": "Deleted {{name}}",
+    "enabled": "Enabled {{name}}",
+    "disabled": "Disabled {{name}}",
+    "toggle": "Enable {{name}}"
   }
 }

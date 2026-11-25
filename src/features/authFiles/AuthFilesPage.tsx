@@ -24,6 +24,7 @@ import {
   type ResolvedTheme,
 } from '@/features/authFiles/constants';
 import { AuthFileCard } from '@/features/authFiles/components/AuthFileCard';
+import { ApiKeyProvidersSection } from '@/features/authFiles/components/ApiKeyProvidersSection';
 import { AuthFileDetailsSheet } from '@/features/authFiles/components/AuthFileDetailsSheet';
 import { getAuthFileRefreshKey } from '@/features/authFiles/manualRefresh';
 import { AuthFileRefreshResults } from '@/features/authFiles/components/AuthFileRefreshResults';
@@ -764,6 +765,8 @@ export function AuthFilesPage() {
           </div>
         )}
       </section>
+
+      <ApiKeyProvidersSection disableControls={disableControls} resolvedTheme={resolvedTheme} />
 
       <div ref={oauthSectionRef}>
         <ModelRulesEntry
