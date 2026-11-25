@@ -5,7 +5,8 @@ import { useRevealGroup } from '@/hooks/motion';
 import { useAuthStore, useThemeStore } from '@/stores';
 import iconVertex from '@/assets/icons/vertex.svg';
 import iconCodex from '@/assets/icons/codex.svg';
-import iconOpenCode from '@/assets/icons/opencode.svg';
+import iconOpenCodeLight from '@/assets/icons/opencode.svg';
+import iconOpenCodeDark from '@/assets/icons/opencode-dark.svg';
 import { KIMI_DISPLAY_NAME } from '@/features/providers/kimi';
 import { OAuthHeader } from './components/OAuthHeader';
 import { LoginProxyField } from './components/LoginProxyField';
@@ -77,6 +78,11 @@ export function OAuthPage() {
     isFocused: () => focusedRef.current === VERTEX_DIALOG_ID,
     onCredentialAdded: flows.recordCredentialAdded,
   });
+
+  const iconOpenCode = resolveThemedIcon(
+    { light: iconOpenCodeLight, dark: iconOpenCodeDark },
+    resolvedTheme
+  );
 
   const labelOf = (card: OAuthProviderCard) =>
     card.kind === 'plugin'
@@ -153,7 +159,8 @@ export function OAuthPage() {
 
   const dialogCard =
     dialog?.kind === 'oauth' ? providerCards.find((card) => card.id === dialog.id) : undefined;
-  const providerCount = providerCards.length;
+  // + the OpenCode Go tile, which sits with the providers but is not an OAuth card
+  const providerCount = providerCards.length + 1;
   const sponsorCards = providerCards.filter(isSponsor);
   const regularCards = providerCards.filter((card) => !isSponsor(card));
   // 赞助商卡占级联的第 0 位，其余磁贴顺延
@@ -220,7 +227,16 @@ export function OAuthPage() {
           }}
         />
       )}
-      <div className={styles.grid}>{regularCards.map(renderTile)}</div>
+      <div className={styles.grid}>
+        {regularCards.map(renderTile)}
+        <ProviderTile
+          label={OPENCODE_LABEL}
+          caption={t('opencode_go.tile_caption')}
+          icon={iconOpenCode}
+          index={regularCards.length + tileIndexOffset}
+          onOpen={openOpenCode}
+        />
+      </div>
 
       <section className={styles.section} aria-labelledby={otherMethodsId}>
         <h2 className={styles.sectionLabel} id={otherMethodsId} data-reveal>
@@ -231,22 +247,15 @@ export function OAuthPage() {
             label={VERTEX_LABEL}
             caption={t('vertex_import.file_label')}
             icon={iconVertex}
-            index={regularCards.length + tileIndexOffset}
+            index={regularCards.length + tileIndexOffset + 1}
             onOpen={openVertex}
           />
           <ProviderTile
             label={t('siwc.bind')}
             caption={t('siwc.tile_caption')}
             icon={iconCodex}
-            index={regularCards.length + tileIndexOffset + 1}
-            onOpen={openSiwc}
-          />
-          <ProviderTile
-            label={OPENCODE_LABEL}
-            caption={t('opencode_go.tile_caption')}
-            icon={iconOpenCode}
             index={regularCards.length + tileIndexOffset + 2}
-            onOpen={openOpenCode}
+            onOpen={openSiwc}
           />
         </div>
       </section>

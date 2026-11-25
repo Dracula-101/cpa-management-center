@@ -92,7 +92,19 @@ export function OpenCodeGoDialog({
           >
             <Input
               label={t('opencode_go.key_label')}
-              hint={t('opencode_go.key_hint')}
+              note={
+                <>
+                  {t('opencode_go.key_note')}{' '}
+                  <a
+                    className={dialogStyles.inlineLink}
+                    href="https://opencode.ai/console"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    opencode.ai/console
+                  </a>
+                </>
+              }
               type="password"
               autoComplete="off"
               spellCheck={false}
