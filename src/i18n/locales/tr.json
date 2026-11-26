@@ -112,7 +112,8 @@
     "plugins": "Eklentiler",
     "config_management": "Yapılandırma Paneli",
     "logs": "Günlük Görüntüleyici",
-    "system_info": "Yönetim Merkezi Bilgisi"
+    "system_info": "Yönetim Merkezi Bilgisi",
+    "job_portal": "Job Portal AI"
   },
   "nav_groups": {
     "operate": "İşlet",
@@ -132,7 +133,8 @@
     "plugins": "Kurulum, güncelleme ve yapılandırma",
     "logs": "İstek İzleme",
     "config_management": "Ağ Geçidi Yapılandırması",
-    "system_info": "Çalışma Zamanı ve Tanılama"
+    "system_info": "Çalışma Zamanı ve Tanılama",
+    "job_portal": "The app's components, lanes, pools and AI log"
   },
   "dashboard": {
     "hero_verdict_good": "Tüm Sistemler Dengede",

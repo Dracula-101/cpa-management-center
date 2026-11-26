@@ -13,6 +13,7 @@ import { PLUGINS_STORE_PATH } from '@/features/plugins/pluginsView';
 import { ConfigPage } from '@/features/config/ConfigPage';
 import { LogsPage } from '@/features/logs/LogsPage';
 import { SystemPage } from '@/pages/SystemPage';
+import { JobPortalPage } from '@/features/jobPortal/JobPortalPage';
 import { useAuthStore } from '@/stores';
 
 const createMainRoutes = (supportsPlugin: boolean) => [
@@ -29,6 +30,7 @@ const createMainRoutes = (supportsPlugin: boolean) => [
   { path: '/auth-files/oauth-model-alias', element: <AuthFilesOAuthModelAliasEditPage /> },
   { path: '/oauth', element: <OAuthPage /> },
   { path: '/routing', element: <RoutingPage /> },
+  { path: '/job-portal', element: <JobPortalPage /> },
   { path: '/quota', element: <QuotaPage /> },
   ...(supportsPlugin
     ? [

@@ -112,7 +112,8 @@
     "plugins": "Plugins",
     "config_management": "Config Panel",
     "logs": "Logs Viewer",
-    "system_info": "Management Center Info"
+    "system_info": "Management Center Info",
+    "job_portal": "Job Portal AI"
   },
   "nav_groups": {
     "operate": "Operate",
@@ -132,7 +133,8 @@
     "plugins": "Install, update & configure",
     "logs": "Request tracing",
     "config_management": "Gateway configuration",
-    "system_info": "Runtime & diagnostics"
+    "system_info": "Runtime & diagnostics",
+    "job_portal": "The app's components, lanes, pools and AI log"
   },
   "dashboard": {
     "hero_verdict_good": "All systems steady",

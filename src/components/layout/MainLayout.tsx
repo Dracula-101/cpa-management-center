@@ -664,6 +664,12 @@ export function MainLayout() {
           metaKey: 'nav_meta.routing',
           icon: sidebarIcons.routing,
         },
+        {
+          path: '/job-portal',
+          labelKey: 'nav.job_portal',
+          metaKey: 'nav_meta.job_portal',
+          icon: sidebarIcons.routing,
+        },
         ...(isApiKeyFunConfigured ? [quickStartNavItem] : []),
       ],
     },

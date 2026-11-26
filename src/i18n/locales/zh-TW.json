@@ -112,7 +112,8 @@
     "plugins": "插件",
     "config_management": "設定面板",
     "logs": "記錄",
-    "system_info": "系統資訊"
+    "system_info": "系統資訊",
+    "job_portal": "Job Portal AI"
   },
   "nav_groups": {
     "operate": "運行",
@@ -132,7 +133,8 @@
     "plugins": "安裝、更新與設定",
     "logs": "請求追蹤與排查",
     "config_management": "閘道基礎設定",
-    "system_info": "運行與診斷資訊"
+    "system_info": "運行與診斷資訊",
+    "job_portal": "The app's components, lanes, pools and AI log"
   },
   "dashboard": {
     "hero_verdict_good": "運行平穩",
