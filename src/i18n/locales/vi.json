@@ -433,6 +433,7 @@
     "policy_retry_invalid": "Nhập một số nguyên an toàn không âm, hoặc chọn Kế thừa.",
     "policy_aliases_invalid": "Nhập tên model và bí danh không để trống cho mỗi hàng mới hoặc đã chỉnh sửa.",
     "policy_rules_invalid": "Hoàn thành mỗi quy tắc đã chỉnh sửa với mã trạng thái dương, một hành động và ít nhất một điều kiện khớp không để trống.",
+    "filter_kiro": "Kiro",
     "filter_opencode": "OpenCode Go",
     "filter_openai-compatibility": "OpenAI compatible"
   },
@@ -924,6 +925,8 @@
     "devin_oauth_status_error": "Xác thực Devin thất bại:",
     "devin_oauth_start_error": "Không thể bắt đầu Devin OAuth:",
     "devin_callback_hint": "Máy chủ từ xa: sao chép URL cuối cùng kết thúc bằng /devin/callback?… từ thanh địa chỉ trình duyệt, ngay cả khi không thể truy cập trang loopback. Giữ nguyên cổng, http/https, code và state. Gửi URL vào đây, sau đó tiếp tục chờ xác thực hoàn tất.",
+    "kiro_callback_hint": "Pick Google or GitHub on the Kiro page. It then sends your browser to a localhost:3128 page that won't load; copy that whole address from the address bar and submit it here.",
+    "kiro_callback_placeholder": "http://localhost:3128/oauth/callback?login_option=google&code=...&state=...",
     "devin_callback_placeholder": "http://127.0.0.1:<cổng-máy-chủ>/devin/callback?code=...&state=...",
     "devin_callback_invalid": "Dán URL callback http/https hoàn chỉnh chứa state và mã ủy quyền hoặc thông báo lỗi.",
     "devin_callback_state_mismatch": "Callback này không thuộc về lượt đăng nhập Devin hiện tại. Vui lòng dùng URL cuối cùng từ lần thử này; không tái sử dụng callback cũ.",

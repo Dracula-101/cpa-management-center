@@ -56,7 +56,14 @@ export interface PluginOAuthProviderCard {
   id: string;
   title: string;
   icon: string;
+  flow?: OAuthFlowKind;
 }
+
+/** Plugin login entries this panel knows the flow of (the plugin API does not say). */
+const PLUGIN_FLOWS: Record<string, OAuthFlowKind> = {
+  kiro: 'browser',
+  'kiro-builder-id': 'device',
+};
 
 export type OAuthProviderCard = BuiltInOAuthProviderCard | PluginOAuthProviderCard;
 
@@ -159,7 +166,7 @@ export const CALLBACK_SUPPORTED = new Set<string>([
 ]);
 
 export const supportsManualCallback = (provider: OAuthProviderCard): boolean =>
-  provider.kind === 'plugin' || CALLBACK_SUPPORTED.has(provider.id);
+  provider.kind === 'plugin' ? provider.flow !== 'device' : CALLBACK_SUPPORTED.has(provider.id);
 
 export const isSponsor = (
   provider: OAuthProviderCard
@@ -197,6 +204,7 @@ export const buildPluginOAuthProviderCards = (
           id: provider,
           title: entry?.name?.trim() || pluginTitle,
           icon: resolvePluginAssetURL(entry?.logo?.trim() || pluginLogo, apiBase),
+          flow: PLUGIN_FLOWS[provider],
         },
       ];
     });

@@ -69,11 +69,28 @@ const buildXaiCallbackUrl = (input: string, state?: string): string | null => {
   return callbackUrl.toString();
 };
 
+// Kiro's token exchange must echo the callback's port, path and login_option, which the
+// backend drops when it reads code/state; the plugin gets the whole address as the code.
+const buildKiroCallbackUrl = (input: string): string | null => {
+  const trimmed = input.trim();
+  if (!isAbsoluteHttpUrl(trimmed)) return null;
+  const params = new URL(trimmed).searchParams;
+  const state = params.get('state')?.trim();
+  if (!state) return null;
+  const callbackUrl = new URL('http://localhost/');
+  callbackUrl.searchParams.set('state', state);
+  const error = params.get('error')?.trim();
+  if (error) callbackUrl.searchParams.set('error', error);
+  else callbackUrl.searchParams.set('code', trimmed);
+  return callbackUrl.toString();
+};
+
 export const resolveCallbackUrl = (
   provider: string,
   input: string,
   state?: string
 ): string | null => {
+  if (provider === 'kiro') return buildKiroCallbackUrl(input);
   if (provider !== 'xai') return input.trim();
   return buildXaiCallbackUrl(input, state);
 };

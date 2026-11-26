@@ -433,6 +433,7 @@
     "quota_refresh_hint": "Yalnızca Bu Kimlik Bilgisinin Kotasını Yenile",
     "quota_refresh_success": "“{{name}}” için Kota Yenilendi",
     "quota_refresh_failed": "“{{name}}” için Kota Yenilenemedi: {{message}}",
+    "filter_kiro": "Kiro",
     "filter_opencode": "OpenCode Go",
     "filter_openai-compatibility": "OpenAI compatible"
   },
@@ -860,6 +861,8 @@
     "devin_oauth_status_error": "Devin Kimlik Doğrulaması Başarısız:",
     "devin_oauth_start_error": "Devin OAuth Başlatılamadı:",
     "devin_callback_hint": "Uzak Sunucu: Geri Döngü Sayfasına Ulaşılamasa Bile Tarayıcı Adres Çubuğundan /devin/callback?… ile Biten Tam Son URL Değerini Kopyala. Bağlantı Noktasını, http/https Değerini, code ve state Değerlerini Değiştirme. URL Değerini Buraya Gönder, Sonra Kimlik Doğrulamanın Bitmesini Bekle.",
+    "kiro_callback_hint": "Pick Google or GitHub on the Kiro page. It then sends your browser to a localhost:3128 page that won't load; copy that whole address from the address bar and submit it here.",
+    "kiro_callback_placeholder": "http://localhost:3128/oauth/callback?login_option=google&code=...&state=...",
     "devin_callback_placeholder": "http://127.0.0.1:<server-port>/devin/callback?code=...&state=...",
     "devin_callback_invalid": "state ve Bir Yetkilendirme Kodu veya Hata İçeren Tam http/https Geri Çağrı URL Değerini Yapıştır.",
     "devin_callback_state_mismatch": "Bu Geri Çağrı Geçerli Devin Girişine Ait Değil. Bu Denemenin Son URL Değerini Kullan. Eski Bir Geri Çağrıyı Yeniden Kullanma.",

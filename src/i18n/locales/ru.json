@@ -437,6 +437,7 @@
     "quota_refresh_hint": "Обновить квоту только для этих учётных данных",
     "quota_refresh_success": "Квота для \"{{name}}\" обновлена",
     "quota_refresh_failed": "Не удалось обновить квоту для \"{{name}}\": {{message}}",
+    "filter_kiro": "Kiro",
     "filter_opencode": "OpenCode Go",
     "filter_openai-compatibility": "OpenAI compatible"
   },
@@ -874,6 +875,8 @@
     "devin_oauth_status_error": "Ошибка аутентификации Devin:",
     "devin_oauth_start_error": "Не удалось запустить Devin OAuth:",
     "devin_callback_hint": "Удалённый сервер: скопируйте полный конечный URL /devin/callback?… из адресной строки, даже если локальный адрес недоступен. Сохраните порт, http/https, code и state без изменений. Отправьте URL здесь и дождитесь завершения аутентификации.",
+    "kiro_callback_hint": "Pick Google or GitHub on the Kiro page. It then sends your browser to a localhost:3128 page that won't load; copy that whole address from the address bar and submit it here.",
+    "kiro_callback_placeholder": "http://localhost:3128/oauth/callback?login_option=google&code=...&state=...",
     "devin_callback_placeholder": "http://127.0.0.1:<порт-сервера>/devin/callback?code=...&state=...",
     "devin_callback_invalid": "Вставьте полный URL обратного вызова http/https со state и кодом авторизации или ошибкой.",
     "devin_callback_state_mismatch": "Этот обратный вызов не относится к текущему входу в Devin. Используйте конечный URL этой попытки, а не старый URL.",

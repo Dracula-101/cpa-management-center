@@ -59,7 +59,7 @@ describe('quota ui state', () => {
   });
 
   test('rejects values that are not part of the current contract', () => {
-    storage.setItem(KEY, JSON.stringify({ tab: 'not-a-tab', sortMode: 'by-vibes' }));
+    storage.setItem(KEY, JSON.stringify({ tab: 'Not a tab!', sortMode: 'by-vibes' }));
     expect(readQuotaUiState()).toEqual({ tab: undefined, sortMode: undefined });
   });
 

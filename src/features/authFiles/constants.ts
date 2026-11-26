@@ -12,6 +12,7 @@ import iconGrokDark from '@/assets/icons/grok-dark.svg';
 import iconIflow from '@/assets/icons/iflow.svg';
 import iconKimiDark from '@/assets/icons/kimi-dark.svg';
 import iconKimiLight from '@/assets/icons/kimi-light.svg';
+import iconKiro from '@/assets/icons/kiro.svg';
 import iconOpenCode from '@/assets/icons/opencode.svg';
 import iconOpenCodeDark from '@/assets/icons/opencode-dark.svg';
 import iconQwen from '@/assets/icons/qwen.svg';
@@ -105,6 +106,7 @@ export const AUTH_FILE_ICONS: Record<string, AuthFileIconAsset> = {
   xai: { light: iconGrok, dark: iconGrokDark },
   iflow: iconIflow,
   kimi: { light: iconKimiDark, dark: iconKimiLight },
+  kiro: iconKiro,
   opencode: { light: iconOpenCode, dark: iconOpenCodeDark },
   qwen: iconQwen,
   vertex: iconVertex,

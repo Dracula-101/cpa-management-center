@@ -92,11 +92,11 @@ export function OAuthPage() {
         : t(card.label.key);
 
   const captionOf = (card: OAuthProviderCard) => {
-    if (card.kind === 'plugin') return t('auth_login.method_plugin');
+    if (card.kind === 'plugin' && !card.flow) return t('auth_login.method_plugin');
     const method = t(
       card.flow === 'device' ? 'auth_login.method_device' : 'auth_login.method_browser'
     );
-    return card.domain ? `${card.domain} · ${method}` : method;
+    return card.kind === 'builtin' && card.domain ? `${card.domain} · ${method}` : method;
   };
 
   const iconOf = (card: OAuthProviderCard) =>

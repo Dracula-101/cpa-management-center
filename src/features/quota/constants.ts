@@ -14,7 +14,8 @@ export const QUOTA_TAB_ORDER: readonly QuotaProviderType[] = [
   'plugin',
 ];
 
-export type QuotaTabId = 'all' | QuotaProviderType;
+/** 'all', a provider type, or a plugin provider key such as 'kiro'. */
+export type QuotaTabId = string;
 
 /** 页级分页固定 20/页，同时把「刷新全部」的上游并发限制在 20。 */
 export const QUOTA_PAGE_SIZE = 20;

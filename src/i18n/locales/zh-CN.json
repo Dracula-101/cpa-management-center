@@ -431,6 +431,7 @@
     "quota_refresh_hint": "仅刷新该认证文件的额度",
     "quota_refresh_success": "已刷新 \"{{name}}\" 的额度",
     "quota_refresh_failed": "刷新 \"{{name}}\" 的额度失败：{{message}}",
+    "filter_kiro": "Kiro",
     "filter_opencode": "OpenCode Go",
     "filter_openai-compatibility": "OpenAI compatible"
   },
@@ -853,6 +854,8 @@
     "devin_oauth_status_error": "Devin 认证失败：",
     "devin_oauth_start_error": "启动 Devin OAuth 失败：",
     "devin_callback_hint": "远程服务器：即使浏览器无法打开回环地址，也请从地址栏复制最终的完整 /devin/callback?… URL，保留原有端口、http/https、code 和 state。提交后请继续等待认证完成。",
+    "kiro_callback_hint": "Pick Google or GitHub on the Kiro page. It then sends your browser to a localhost:3128 page that won't load; copy that whole address from the address bar and submit it here.",
+    "kiro_callback_placeholder": "http://localhost:3128/oauth/callback?login_option=google&code=...&state=...",
     "devin_callback_placeholder": "http://127.0.0.1:<服务器端口>/devin/callback?code=...&state=...",
     "devin_callback_invalid": "请粘贴完整的 http/https 回调 URL，包含 state 和授权码或错误信息。",
     "devin_callback_state_mismatch": "此回调不属于当前 Devin 登录。请使用本次授权的最终 URL，不要复用旧回调。",

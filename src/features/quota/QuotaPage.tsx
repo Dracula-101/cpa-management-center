@@ -43,6 +43,7 @@ import {
   buildTabCounts,
   canRefreshQuotaAfterList,
   classifyQuotaFiles,
+  buildTabIds,
   filterEntriesByTab,
   filterEntriesBySearch,
   paginate,
@@ -63,7 +64,6 @@ import { readQuotaUiState, writeQuotaUiState } from './uiState';
 import styles from './QuotaPage.module.scss';
 import { listCredentialsWithApiKeyProviders } from '@/features/authFiles/apiKeyProviders';
 
-const TAB_IDS: string[] = ['all', ...QUOTA_TAB_ORDER];
 const SKELETON_CARD_COUNT = 6;
 
 /**
@@ -193,6 +193,9 @@ export function QuotaPage() {
 
   const entries = useMemo(() => classifyQuotaFiles(files), [files]);
   const tabCounts = useMemo(() => buildTabCounts(entries), [entries]);
+  const tabIds = useMemo(() => buildTabIds(entries), [entries]);
+  // A saved plugin tab whose credentials are gone falls back to All.
+  const activeTab = loading || tabIds.includes(tab) ? tab : 'all';
   // Account-level settings span every page and tab, so count over all entries.
   const codexCreditOverageCounts = useMemo(
     () =>
@@ -202,8 +205,8 @@ export function QuotaPage() {
     [entries]
   );
   const filteredEntries = useMemo(
-    () => filterEntriesBySearch(filterEntriesByTab(entries, tab), search),
-    [entries, tab, search]
+    () => filterEntriesBySearch(filterEntriesByTab(entries, activeTab), search),
+    [entries, activeTab, search]
   );
   const handleSearchChange = useCallback((value: string) => {
     setSearch(value);
@@ -403,9 +406,9 @@ export function QuotaPage() {
         {/* 提供商导航与搜索工具栏分层，避免不同控件争夺视觉焦点。 */}
         <div className={styles.tabsRow} data-reveal>
           <ProviderTabs
-            types={TAB_IDS}
+            types={tabIds}
             counts={tabCounts}
-            active={tab}
+            active={activeTab}
             resolvedTheme={resolvedTheme}
             onChange={handleTabChange}
           />
@@ -471,14 +474,18 @@ export function QuotaPage() {
                 ? t('quota_management.search_empty_title')
                 : tab === 'all'
                   ? t('quota_management.empty_title')
-                  : t(`${QUOTA_ADAPTERS[tab].i18nPrefix}.empty_title`)
+                  : t(
+                      `${(QUOTA_ADAPTERS[tab as QuotaProviderType] ?? QUOTA_ADAPTERS.plugin).i18nPrefix}.empty_title`
+                    )
             }
             description={
               search.trim()
                 ? t('quota_management.search_empty_desc')
                 : tab === 'all'
                   ? t('quota_management.empty_desc')
-                  : t(`${QUOTA_ADAPTERS[tab].i18nPrefix}.empty_desc`)
+                  : t(
+                      `${(QUOTA_ADAPTERS[tab as QuotaProviderType] ?? QUOTA_ADAPTERS.plugin).i18nPrefix}.empty_desc`
+                    )
             }
             action={
               search.trim() ? (

@@ -4,6 +4,7 @@
  */
 
 import type { AuthFileItem } from '@/types';
+import { resolveAuthProvider } from '@/utils/quota';
 import { ANTIGRAVITY_CONFIG } from './providers/antigravity/data';
 import { CLAUDE_CONFIG } from './providers/claude/data';
 import { CODEX_CONFIG } from './providers/codex/data';
@@ -69,9 +70,24 @@ export function classifyQuotaFiles(files: AuthFileItem[]): QuotaFileEntry[] {
   return QUOTA_TAB_ORDER.flatMap((type) => groups.get(type) ?? []);
 }
 
+/** Plugin quota cards get a tab per provider (e.g. Kiro) instead of one shared "Plugin" tab. */
+export const quotaTabOf = (entry: QuotaFileEntry): string =>
+  entry.type === 'plugin' ? resolveAuthProvider(entry.file) || 'plugin' : entry.type;
+
+export function buildTabIds(entries: QuotaFileEntry[]): string[] {
+  const pluginTabs = [
+    ...new Set(entries.filter((entry) => entry.type === 'plugin').map(quotaTabOf)),
+  ].sort();
+  return [
+    'all',
+    ...QUOTA_TAB_ORDER.filter((type) => type !== 'plugin'),
+    ...(pluginTabs.length ? pluginTabs : ['plugin']),
+  ];
+}
+
 export function filterEntriesByTab(entries: QuotaFileEntry[], tab: QuotaTabId): QuotaFileEntry[] {
   if (tab === 'all') return entries;
-  return entries.filter((entry) => entry.type === tab);
+  return entries.filter((entry) => quotaTabOf(entry) === tab);
 }
 
 /** Search public account identifiers only; account may contain an API key. */
@@ -126,7 +142,8 @@ export function buildTabCounts(entries: QuotaFileEntry[]): Record<string, number
     counts[type] = 0;
   }
   for (const entry of entries) {
-    counts[entry.type] += 1;
+    const tab = quotaTabOf(entry);
+    counts[tab] = (counts[tab] ?? 0) + 1;
   }
   return counts;
 }

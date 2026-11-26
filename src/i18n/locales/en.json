@@ -433,6 +433,7 @@
     "quota_refresh_hint": "Refresh quota only for this credential",
     "quota_refresh_success": "Quota refreshed for \"{{name}}\"",
     "quota_refresh_failed": "Failed to refresh quota for \"{{name}}\": {{message}}",
+    "filter_kiro": "Kiro",
     "filter_opencode": "OpenCode Go",
     "filter_openai-compatibility": "OpenAI compatible"
   },
@@ -860,6 +861,8 @@
     "devin_oauth_status_error": "Devin authentication failed:",
     "devin_oauth_start_error": "Failed to start Devin OAuth:",
     "devin_callback_hint": "Remote server: copy the complete final URL ending in /devin/callback?… from the browser address bar, even if the loopback page cannot be reached. Keep its port, http/https, code and state unchanged. Submit the URL here, then wait for authentication to finish.",
+    "kiro_callback_hint": "Pick Google or GitHub on the Kiro page. It then sends your browser to a localhost:3128 page that won't load; copy that whole address from the address bar and submit it here.",
+    "kiro_callback_placeholder": "http://localhost:3128/oauth/callback?login_option=google&code=...&state=...",
     "devin_callback_placeholder": "http://127.0.0.1:<server-port>/devin/callback?code=...&state=...",
     "devin_callback_invalid": "Paste the complete http/https callback URL containing state and an authorization code or error.",
     "devin_callback_state_mismatch": "This callback does not belong to the current Devin login. Use the final URL from this attempt; do not reuse an old callback.",
