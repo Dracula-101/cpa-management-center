@@ -60,6 +60,31 @@ export type Pools = {
   channels: string[];
 };
 
+export type AgentRow = {
+  id: string;
+  label: string;
+  open: number;
+  critical: boolean;
+  mode: 'off' | 'shadow' | 'live';
+  tokensToday: number;
+  investigationsToday: number;
+  lastWake: string | null;
+  profile: { goal: string; tokensDay: number; investigationsDay: number; error: string } | null;
+};
+export type AgentIncident = { id: number; ownerLabel: string; severity: 'info' | 'warning' | 'critical'; title: string; rule: string; count: number; lastAt: string };
+export type AgentAction = { id: number; actorLabel: string; kind: string; target: string; status: string; result: string; reason: string; createdAt: string };
+export type AgentFix = { id: number; owner: string; title: string; state: string; issue: number | null; pr: number | null; checks: string; risky: string };
+export type Agents = {
+  mode: 'off' | 'shadow' | 'live';
+  dashboard: string;
+  agents: AgentRow[];
+  brain: { tokensToday: number; lastReview: string | null };
+  incidents: AgentIncident[];
+  waiting: AgentAction[];
+  recent: AgentAction[];
+  fixes: AgentFix[];
+};
+
 export const panelToken = {
   get: (): string => obfuscatedStorage.getItem<string>(TOKEN_KEY) || '',
   set: (value: string) => obfuscatedStorage.setItem(TOKEN_KEY, value.trim()),

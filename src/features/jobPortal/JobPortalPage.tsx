@@ -2,12 +2,13 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { useAuthStore } from '@/stores';
-import { jp, panelToken, type Call, type Flow, type Lane, type Member, type Overview, type Pools, type Stats } from './api';
+import { jp, panelToken, type Agents, type Call, type Flow, type Lane, type Member, type Overview, type Pools, type Stats } from './api';
 import styles from './JobPortalPage.module.scss';
 
-type Tab = 'needs' | 'components' | 'map' | 'calls' | 'pools' | 'accounts';
+type Tab = 'needs' | 'agents' | 'components' | 'map' | 'calls' | 'pools' | 'accounts';
 const TABS: { key: Tab; label: string }[] = [
   { key: 'needs', label: 'Needs a look' },
+  { key: 'agents', label: 'Agents' },
   { key: 'components', label: 'Components' },
   { key: 'map', label: 'Who uses what' },
   { key: 'calls', label: 'Every call' },
@@ -107,7 +108,9 @@ export function JobPortalPage() {
       </div>
       {notice ? <div className={styles.row}><span className={styles.warning}>{notice}</span></div> : null}
       {overview.error ? <Card title="Couldn't load"><p className={styles.muted}>{overview.error}</p></Card> : null}
-      {!d ? null : tab === 'needs' ? (
+      {tab === 'agents' ? (
+        <AgentsTab apiBase={apiBase} />
+      ) : !d ? null : tab === 'needs' ? (
         <Needs d={d} setLane={setLane} />
       ) : tab === 'components' ? (
         <Components d={d} setLane={setLane} />
@@ -399,6 +402,89 @@ function Accounts({ d }: { d: Overview }) {
           ))}
         </div>
       </Card>
+    </>
+  );
+}
+
+const SEVERITY: Record<string, string> = { critical: styles.danger, warning: styles.warning, info: styles.pill };
+const ACTION: Record<string, string> = { needs_you: styles.warning, done: styles.success, failed: styles.danger, shadow: styles.pill };
+
+function AgentsTab({ apiBase }: { apiBase: string }) {
+  const agents = useLoad(() => jp<Agents>(apiBase, 'agents'), apiBase);
+  if (agents.error) return <Card title="Couldn't load"><p className={styles.muted}>{agents.error}</p></Card>;
+  const d = agents.data;
+  if (!d) return null;
+  const open = d.agents.reduce((n, a) => n + a.open, 0);
+  return (
+    <>
+      <div className={styles.metrics}>
+        <div className={styles.metric}><b>{d.mode}</b><span>Brain mode (BRAIN_MODE)</span></div>
+        <div className={styles.metric}><b>{open}</b><span>open incidents</span></div>
+        <div className={styles.metric}><b>{d.waiting.length}</b><span>waiting for you</span></div>
+        <div className={styles.metric}><b>{num(d.brain.tokensToday)}</b><span>Brain tokens today</span></div>
+        <div className={styles.metric}><b>{d.fixes.filter((f) => !['kept', 'closed', 'rolled_back', 'stalled'].includes(f.state)).length}</b><span>fixes in flight</span></div>
+      </div>
+      <div className={styles.row}>
+        <span className={styles.grow}>Approve, deny, switch agents live and read memory on the dashboard.</span>
+        <a href={d.dashboard} target="_blank" rel="noreferrer"><Button size="sm">Open the Brain tab</Button></a>
+      </div>
+      <Card title="Agents">
+        <div className={styles.list}>
+          {d.agents.map((a) => (
+            <div key={a.id} className={styles.row}>
+              <b className={styles.grow}>{a.label}</b>
+              {a.profile?.error ? <span className={styles.danger}>profile error</span> : <span className={a.mode === 'live' ? styles.success : styles.pill}>{a.mode}</span>}
+              {a.open ? <span className={a.critical ? styles.danger : styles.warning}>{a.open} open</span> : <span className={styles.success}>ok</span>}
+              <span className={styles.muted}>{num(a.tokensToday)} / {num(a.profile?.tokensDay ?? 0)} tokens · {a.investigationsToday}/{a.profile?.investigationsDay ?? 0} investigations</span>
+            </div>
+          ))}
+        </div>
+      </Card>
+      {d.waiting.length ? (
+        <Card title="Waiting for you (decide on the dashboard)">
+          <div className={styles.list}>
+            {d.waiting.map((w) => (
+              <div key={w.id} className={styles.row}>
+                <b className={styles.grow}>{w.actorLabel}: {w.kind.replace('_', ' ')} {w.target}</b>
+                <span className={styles.muted}>{w.reason || w.result}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
+      ) : null}
+      <Card title="Open incidents">
+        <div className={styles.list}>
+          {d.incidents.length ? d.incidents.map((i) => (
+            <div key={i.id} className={styles.row}>
+              <span className={SEVERITY[i.severity] ?? styles.pill}>{i.severity}</span>
+              <b className={styles.grow}>{i.title}</b>
+              <span className={styles.muted}>{i.ownerLabel} · {i.rule.replace(/_/g, ' ')}{i.count > 1 ? ` · ${i.count}×` : ''}</span>
+            </div>
+          )) : <p className={styles.muted}>Nothing open.</p>}
+        </div>
+      </Card>
+      <Section title="What agents did (or would do, in shadow) in the last 24 h">
+        {d.recent.map((r) => (
+          <div key={r.id} className={styles.row}>
+            <span className={ACTION[r.status] ?? styles.pill}>{r.status.replace('_', ' ')}</span>
+            <b className={styles.grow}>{r.actorLabel}: {r.kind.replace('_', ' ')} {r.target}</b>
+            <span className={styles.muted}>{r.result}</span>
+          </div>
+        ))}
+      </Section>
+      {d.fixes.length ? (
+        <Section title="Code fixes (GitHub issue → cloud session → PR → you merge → deploy → 1-hour watch)">
+          {d.fixes.map((f) => (
+            <div key={f.id} className={styles.row}>
+              <span className={styles.info}>{f.state.replace('_', ' ')}</span>
+              <b className={styles.grow}>{f.title}</b>
+              {f.issue ? <span className={styles.muted}>issue #{f.issue}</span> : null}
+              {f.pr ? <span className={styles.muted}>PR #{f.pr} · checks {f.checks || '—'}</span> : null}
+              {f.risky ? <span className={styles.warning}>you deploy: {f.risky}</span> : null}
+            </div>
+          ))}
+        </Section>
+      ) : null}
     </>
   );
 }
